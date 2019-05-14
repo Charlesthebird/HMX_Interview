@@ -33,7 +33,94 @@ window.addEventListener('load', function() {
 
 
 function solution() {
+    // make sure the page is scaled correctly
     this.onResize();
+    // cache commonly used references
+    this.initializeReferences();
+    // initialize punnett square
+    this.initializePunnettState();
+    // create the phenotype chart visualization
+    this.initializePhenotypeChart();
+}
+solution.prototype.initializePhenotypeChart = function() {
+    this.pCtx = document.getElementById('phenotypeCanvas').getContext('2d');
+    this.pChart = new Chart(this.pCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Yellow', 'Green'],
+            datasets: [{
+                data: [3, 4],
+                backgroundColor: [ '#EFCE22', '#65B14F' ],
+                borderColor: '#FFFFFF',
+                borderWidth: 3
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'PHENOTYPIC RATIO',
+                fontWeight: 'bold',
+                fontFamily: 'Roboto',
+                fontSize: 16,
+                fontColor: '#FFF',
+                padding: 30
+            },
+            legend: { 
+                display: false
+            },
+            pointLabels: {
+                fontFamily: 'Roboto',
+                fontSize: 14,
+                fontStyle: 'bold'
+            },
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 16,
+                        stepSize: 1
+                    },
+                    gridLines: {
+                        display: false,
+                        lineWidth: 3,
+                        color: '#585858'
+                    }
+                }],
+                xAxes: [{
+                    barPercentage: .4,
+                    ticks: {
+                        beginAtZero: true,
+                        fontSize: 16,
+                    },
+                    gridLines: {
+                        display: false,
+                        lineWidth: 3,
+                        color: '#585858'
+                    }
+                }]
+            }
+
+        }
+    });
+    this.updatePhenotypeChart();
+}
+solution.prototype.updatePhenotypeChart = function() {
+    if(this.pChart === undefined) { return; }
+    var numYellow = 0;
+    var numGreen = 0;
+    if(this.TLlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    if(this.TRlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    if(this.BLlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    if(this.BRlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    this.pChart.data.datasets[0].data[0] = numYellow;
+    this.pChart.data.datasets[0].data[1] = numGreen;
+    this.pChart.update();
+}
+solution.prototype.initializeReferences = function() {
     // store the button references
     this.sideButtons = $('.peaBlockSide');
     this.topButtons = $('.peaBlockTop');
@@ -51,7 +138,10 @@ function solution() {
     this.topRightLabel = $('#topRightLabel');
     this.topSideLabel = $('#topSideLabel');
     this.botSideLabel = $('#botSideLabel');
-
+    // get the genotypic label reference
+    this.genotypicLabel = $('#genotypicRatioText');
+}
+solution.prototype.initializePunnettState = function() {
     // select the initial options
     this.topSelection = this.getPeaButtonText(
         this.topButtons[0].firstElementChild);
@@ -81,6 +171,7 @@ solution.prototype.onResize = function() {
     $('.peaButton').each(function( idx, el) {
         $(el).css('height', $(el).css('width'));
     });
+    if(this.pChart !== undefined) { this.pChart.resize(); }
 }
 solution.prototype.removeSelectionClasses= function(idx, el) {
     var btn = $(el.firstElementChild);
@@ -105,7 +196,6 @@ solution.prototype.punnettPressed = function(e) {
     this.updateVisualization();
 }
 solution.prototype.updateVisualization = function() {
-    console.log(this.sideSelection, this.topSelection);
     // update the big labels
     this.topSideLabel.text(this.sideSelection[0]);
     this.botSideLabel.text(this.sideSelection[1]);
@@ -115,7 +205,6 @@ solution.prototype.updateVisualization = function() {
     var greenSrc = 'assets/green_pea.svg';
     var yellowSrc = 'assets/yellow_pea.svg';
 
-    console.log(this.TLlabel);
     // Update images and labels
     // If the top and side characters are equal, we can duplicate the characters to save time checking all cases
     if(this.topSelection[0] === this.sideSelection[0]) {
@@ -150,8 +239,8 @@ solution.prototype.updateVisualization = function() {
             this.BLimg.attr('src', greenSrc);
         }
     } else {
-        this.BRlabel.text('Yy');
-        this.BRimg.attr('src', yellowSrc);
+        this.BLlabel.text('Yy');
+        this.BLimg.attr('src', yellowSrc);
     }
     if(this.topSelection[1] === this.sideSelection[1]) {
         this.BRlabel.text(this.topSelection[1] + this.topSelection[1]);
@@ -164,6 +253,30 @@ solution.prototype.updateVisualization = function() {
         this.BRlabel.text('Yy');
         this.BRimg.attr('src', yellowSrc);
     }
+    this.updatePhenotypeChart();
+    this.updateGenotypicRatio();
+}
+solution.prototype.updateGenotypicRatio = function() {
+    // count the types of combinations present in the table
+    var numYY = 0;
+    var numYy = 0;
+    var numyy = 0;
+    if(this.TLlabel.text() === 'YY') { numYY++; }
+    else if(this.TLlabel.text() === 'Yy') { numYy++; }
+    else if(this.TLlabel.text() === 'yy') { numyy++; }
+    if(this.TRlabel.text() === 'YY') { numYY++; }
+    else if(this.TRlabel.text() === 'Yy') { numYy++; }
+    else if(this.TRlabel.text() === 'yy') { numyy++; }
+    if(this.BLlabel.text() === 'YY') { numYY++; }
+    else if(this.BLlabel.text() === 'Yy') { numYy++; }
+    else if(this.BLlabel.text() === 'yy') { numyy++; }
+    if(this.BRlabel.text() === 'YY') { numYY++; }
+    else if(this.BRlabel.text() === 'Yy') { numYy++; }
+    else if(this.BRlabel.text() === 'yy') { numyy++; }
+    // update the label
+    this.genotypicLabel.text(numYY + ' YY : ' +
+        numYy + ' Yy : '
+        + numyy + ' yy');
 }
 
 

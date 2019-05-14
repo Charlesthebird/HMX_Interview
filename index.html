@@ -4,6 +4,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" href="css/Chart.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
@@ -22,6 +23,11 @@
             <!-- LEFT HALF OF PAGE -->
             <div class="col-lg-6 col-md-6 col-sm-12">
                 <div class="punnettContainer">
+                    <div class="row">
+                        <div class="instructionsText">
+                            Select two pea plant genotypes to cross.
+                        </div>
+                    </div>
                     <!-- top row of peas -->
                     <div class="row">
                         <div class="col-3"></div>
@@ -129,23 +135,18 @@
 
 
             <!-- RIGHT HALF OF PAGE -->
-            <div class="col-lg-6 col-md-6 col-sm-12">
-                <div class="phenotypicContainer" style="
-                display: block;
-                height: 200px;
-                margin: 30px;
-                background-color: #00f4;
-                border:3px solid black;
-                ">
-                   phenotypicContainer 
+            <div class="col-lg-6 col-md-6 col-sm-12 rightHalfContainer">
+                <div class="phenotypicContainer">
+                    <canvas id='phenotypeCanvas'></canvas>
                 </div>
-                <div class="genotypicContainer" style="
-                display: block;
-                height: 200px;
-                margin: 30px;
-                background-color: #00f4;
-                ">
-                    genotypicContainer
+                <div class="genotypicContainer">
+                    <div class="instructionsText">
+                        GENOTYPIC RATIO
+                    </div>
+                    <div id="genotypicRatioText">
+                        1 YY : 2 Yy : 1 yy
+                    </div>
+
                 </div>
             </div>
 
@@ -155,6 +156,7 @@
 
 
     <script src="js/jquery-3.4.1.js"></script>
+    <script src="js/Chart.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
