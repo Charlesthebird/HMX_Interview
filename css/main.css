@@ -1,0 +1,112 @@
+
+
+
+body {
+    background-color: #ace1ff;
+    margin:0px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.titleContainer {
+    width:100%;
+    background-color: white;
+    text-align: center;
+    display: block;
+    border-bottom: 1px solid #0007;
+    box-shadow: 0px 0px 15px 0px #0003;
+}
+
+
+.title {
+    padding:20px;
+    padding-bottom:10px;
+    font-size: 20px;
+}
+.subtitle {
+    padding:20px;
+    font-size: 16px;
+    padding-top: 0px;
+}
+
+
+.punnettContainer {
+    margin: 15px;
+    margin-bottom: 30px;
+}
+
+
+.peaBlockSide {
+    margin-top:20px;
+}
+.peaButtonLabel {
+    cursor: inherit;
+    pointer-events: none;
+    font-size: .7em;
+    margin-top: -1px;
+    font-weight: bold;
+}
+.peaImg {
+    width: 75%;
+    display: inline-block;
+    pointer-events: none;
+}
+.bigPeaImg {
+    display: inline-block;
+    width: 50%;
+    padding-top: 10px;
+}
+
+.visualizationContainer {
+    padding-top: 20px;
+    min-width: 350px;
+    max-width: 1200px;
+}
+.sidePLabel {
+    font-size: 1.4em;
+    font-weight: bold;
+    vertical-align: bottom;
+    margin-top: 15%;
+    text-align: center;
+}
+
+.col-5.topPLabel {
+    margin-top: -.5em;
+}
+.topPLabel {
+    font-size: 1.4em;
+    font-weight: bold;
+    vertical-align: bottom;
+    text-align: center;
+}
+
+
+.peaButton.peaButtonSelected,
+.peaButton.peaButtonSelected:hover {
+    opacity: 1;
+    background-color: #FFF;
+    border: 2px solid #F63;
+}
+.peaButton:hover {
+    opacity: .9;
+    background-color: #FFF7;
+}
+.peaButton {
+    text-align: center;
+    cursor: pointer;
+    opacity: .9;
+    padding:10px;
+    background-color: #FFF5;
+    border-radius: 5px;
+}
+
+
+
+.pSquareContainer { 
+    padding: 2px;
+}
+.pSquare {
+    background-color: white;
+    height: 100%;
+    border-radius: 1px;
+    text-align: center;
+}
