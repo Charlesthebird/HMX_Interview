@@ -1,34 +1,31 @@
 <!DOCTYPE html>
 <head>
     <title>Nicholas Bucher HMX Interview</title>
-
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400" rel="stylesheet">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/Chart.css">
     <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
-
-    <div class="titleContainer">
-        <div class="title">
-            HMX Interview Submission
-        </div>
-        <div class="subtitle">
-            Nicholas Bucher
-        </div>
-    </div>
-
     <div class="visualizationContainer">
         <div class="row">
-            <!-- LEFT HALF OF PAGE -->
-            <div class="col-lg-6 col-md-6 col-sm-12">
+            <!-- LEFT HALF OF PAGE STARTS (Punnett square section) -->
+            <div class="col-lg-6 col-md-6 col-sm-12 leftHalfContainer">
+                <div class="row">
+                    <div class="titleContainer">
+                        <div class="title">
+                            Nicholas Bucher - HMX Interview
+                        </div>
+                    </div>
+                </div>
                 <div class="punnettContainer">
                     <div class="row">
                         <div class="instructionsText">
                             Select two pea plant genotypes to cross.
                         </div>
                     </div>
-                    <!-- top row of peas -->
+                    <!-- top row of pea buttons STARTS -->
                     <div class="row">
                         <div class="col-3"></div>
                         <div class="col-9" id="punnettTopRow">
@@ -58,8 +55,9 @@
                             </div>
                         </div>
                     </div>
+                    <!-- top row of pea buttons ENDS -->
                     <div class="row">
-                        <!-- side row of peas -->
+                        <!-- side row of pea buttons STARTS -->
                         <div class="col-3" id="punnettSideRow">
                             <div class="peaBlockSide">
                                 <div class="peaButton">
@@ -79,63 +77,62 @@
                                     <div class="peaButtonLabel">yy</div>
                                 </div>
                             </div>
-
                         </div>
+                        <!-- side row of pea buttons ENDS -->
+                        <!-- Punnett Square STARTS -->
                         <div class="col-9" id="punnettTable">
                             <div class="row" style="height:10%;">
+                                <!-- top labels of the Punnett square -->
                                 <div class="col-2"></div>
-                                <div id="topLeftLabel" class="col-5 topPLabel">
-                                    Y
-                                </div>
-                                <div id="topRightLabel" class="col-5 topPLabel">
-                                    y
-                                </div>
+                                <div id="topLeftLabel" class="col-5 topPLabel"> Y </div>
+                                <div id="topRightLabel" class="col-5 topPLabel"> y </div>
                             </div>
                             <div class="row" style="height:40%;">
-                                <div id="topSideLabel" class="col-2 sidePLabel">
-                                    Y
-                                </div>
+                                <!-- upper side label of the Punnett square -->
+                                <div id="topSideLabel" class="col-2 sidePLabel"> Y </div>
+                                <!-- upper quadrants of the Punnett square -->
                                 <div class="col-5 col-xs-5 pSquareContainer">
-                                    <div class="pSquare">
+                                    <div class="pSquare tl">
                                         <img id="TL-img"
                                         class="bigPeaImg" src="assets/yellow_pea.svg" alt="Yellow_Pea">
                                         <div id="TL-label" class="topPLabel">YY</div>
                                     </div>
                                 </div>
                                 <div class="col-5 pSquareContainer">
-                                    <div class="pSquare">
+                                    <div class="pSquare tr">
                                         <img id="TR-img" class="bigPeaImg" src="assets/yellow_pea.svg" alt="Yellow_Pea">
                                         <div id="TR-label" class="topPLabel">Yy</div>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="height:40%;">
-                                <div id="botSideLabel" class="col-2 sidePLabel">
-                                    y
-                                </div>
+                                <!-- lower side label of the Punnett square -->
+                                <div id="botSideLabel" class="col-2 sidePLabel"> y </div>
+                                <!-- lower quadrants of the Punnett square -->
                                 <div class="col-5 pSquareContainer">
-                                    <div class="pSquare">
+                                    <div class="pSquare bl">
                                         <img id="BL-img" class="bigPeaImg" src="assets/yellow_pea.svg" alt="Yellow_Pea">
                                         <div id="BL-label" class="topPLabel">Yy</div>
                                     </div>
                                 </div>
                                 <div class="col-5 pSquareContainer">
-                                    <div class="pSquare">
+                                    <div class="pSquare br">
                                         <img id="BR-img" class="bigPeaImg" src="assets/yellow_pea.svg" alt="Yellow_Pea">
                                         <div id="BR-label" class="topPLabel">yy</div>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
+                        <!-- Punnett Square ENDS -->
                     </div>
                 </div>
             </div>
-
-
-
-            <!-- RIGHT HALF OF PAGE -->
+            <!-- LEFT HALF OF PAGE ENDS -->
+            <!-- RIGHT HALF OF PAGE STARTS (Phenotype and Genotype sections) -->
             <div class="col-lg-6 col-md-6 col-sm-12 rightHalfContainer">
+                <div class="row">
+                    <div class="titleContainer"></div>
+                </div>
                 <div class="phenotypicContainer">
                     <canvas id='phenotypeCanvas'></canvas>
                 </div>
@@ -146,15 +143,12 @@
                     <div id="genotypicRatioText">
                         1 YY : 2 Yy : 1 yy
                     </div>
-
                 </div>
             </div>
-
+            <!-- RIGHT HALF OF PAGE ENDS -->
         </div>
     </div>
-
-
-
+    <!-- JavaScript Files -->
     <script src="js/jquery-3.4.1.js"></script>
     <script src="js/Chart.js"></script>
     <script src="js/main.js"></script>

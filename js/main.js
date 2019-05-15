@@ -4,11 +4,7 @@
 
 
 window.addEventListener('load', function() {
-
-
-
     var solutionInstance = new solution();
-
     // Send the onclick events and window resize events to the solution instance
     // These events are handled in "solution.handleEvent(event)"
     // The reason to use this approach is to maintain the solutionInstance's 
@@ -17,30 +13,23 @@ window.addEventListener('load', function() {
         el.addEventListener('click', solutionInstance);
     })
     window.addEventListener('resize', solutionInstance);
-
-
-
-    /*
-    // set up references and the solution object
-    var canvas = document.getElementById('mainCanvas');
-    var ctx = canvas.getContext('2d');
-
-    window.addEventListener('resize', solutionInstance);
-    canvas.addEventListener('mousemove', solutionInstance);
-    canvas.addEventListener('mouseclick', solutionInstance);
-    */
 });
-
-
+// -------------------------------------------------------------------- //
+// -------------------------------------------------------------------- //
+// ------------------ INITIALIZATION FUNCTIONS ------------------------ //
+// -------------------------------------------------------------------- //
+// -------------------------------------------------------------------- //
 function solution() {
     // make sure the page is scaled correctly
     this.onResize();
     // cache commonly used references
     this.initializeReferences();
     // initialize punnett square
-    this.initializePunnettState();
-    // create the phenotype chart visualization
+    this.initializePunnettSquare();
+    // create the phenotype chart object
     this.initializePhenotypeChart();
+    // update the visualization with the initialized values
+    this.updateVisualization();
 }
 solution.prototype.initializePhenotypeChart = function() {
     this.pCtx = document.getElementById('phenotypeCanvas').getContext('2d');
@@ -56,6 +45,7 @@ solution.prototype.initializePhenotypeChart = function() {
             }]
         },
         options: {
+            maintainAspectRatio: false,
             title: {
                 display: true,
                 text: 'PHENOTYPIC RATIO',
@@ -102,23 +92,7 @@ solution.prototype.initializePhenotypeChart = function() {
 
         }
     });
-    this.updatePhenotypeChart();
-}
-solution.prototype.updatePhenotypeChart = function() {
-    if(this.pChart === undefined) { return; }
-    var numYellow = 0;
-    var numGreen = 0;
-    if(this.TLlabel.text().includes('Y')) { numYellow++; }
-    else { numGreen++; }
-    if(this.TRlabel.text().includes('Y')) { numYellow++; }
-    else { numGreen++; }
-    if(this.BLlabel.text().includes('Y')) { numYellow++; }
-    else { numGreen++; }
-    if(this.BRlabel.text().includes('Y')) { numYellow++; }
-    else { numGreen++; }
-    this.pChart.data.datasets[0].data[0] = numYellow;
-    this.pChart.data.datasets[0].data[1] = numGreen;
-    this.pChart.update();
+    $(this.pCtx.canvas).css('display', 'inline-block');
 }
 solution.prototype.initializeReferences = function() {
     // store the button references
@@ -141,24 +115,27 @@ solution.prototype.initializeReferences = function() {
     // get the genotypic label reference
     this.genotypicLabel = $('#genotypicRatioText');
 }
-solution.prototype.initializePunnettState = function() {
+solution.prototype.initializePunnettSquare = function() {
     // select the initial options
     this.topSelection = this.getPeaButtonText(
-        this.topButtons[0].firstElementChild);
-    $(this.topButtons[0].firstElementChild).toggleClass('peaButtonSelected');
+        this.topButtons[1].firstElementChild);
+    $(this.topButtons[1].firstElementChild).addClass('peaButtonSelected');
     this.sideSelection = this.getPeaButtonText(
-        this.sideButtons[0].firstElementChild);
-    $(this.sideButtons[0].firstElementChild).toggleClass('peaButtonSelected');
-    // update the visualization
-    this.updateVisualization();
+        this.sideButtons[1].firstElementChild);
+    $(this.sideButtons[1].firstElementChild).addClass('peaButtonSelected');
 }
 solution.prototype.getPeaButtonText = function(el) {
     return $(el.children[1]).text();
 }
+// -------------------------------------------------------------------- //
+// -------------------------------------------------------------------- //
+// ------------------------ EVENT HANDLING ---------------------------- //
+// -------------------------------------------------------------------- //
+// -------------------------------------------------------------------- //
 // handleEvent(event) is called when events occur on the browser window.
 solution.prototype.handleEvent = function(event) {
     if(event.type == 'resize') { this.onResize(); }
-    else if(event.type == 'click') { this.punnettPressed(event); }
+    else if(event.type == 'click') { this.punnettButtonPressed(event); }
 }
 solution.prototype.onResize = function() {
     // dimensions of the punnett row/column controls are matched here
@@ -171,7 +148,9 @@ solution.prototype.onResize = function() {
     $('.peaButton').each(function( idx, el) {
         $(el).css('height', $(el).css('width'));
     });
-    if(this.pChart !== undefined) { this.pChart.resize(); }
+    if(this.pChart !== undefined) { 
+        this.pChart.resize(); 
+    }
 }
 solution.prototype.removeSelectionClasses= function(idx, el) {
     var btn = $(el.firstElementChild);
@@ -179,7 +158,7 @@ solution.prototype.removeSelectionClasses= function(idx, el) {
         $(btn).removeClass('peaButtonSelected');
     }
 }
-solution.prototype.punnettPressed = function(e) {
+solution.prototype.punnettButtonPressed = function(e) {
     // determine whether a top button or a side button was clicked
     var isSideButton = $(e.target.parentElement).hasClass('peaBlockSide');
     // if there are buttons already selected, deselect them
@@ -192,23 +171,33 @@ solution.prototype.punnettPressed = function(e) {
     }
     // show that this class was selected
     $(e.target).addClass('peaButtonSelected');
-    // update the punnett square
+    // update the visualization with the new values (this.topSelection and this.sideSelection)
     this.updateVisualization();
 }
+// -------------------------------------------------------------------- //
+// -------------------------------------------------------------------- //
+// ----------------------- UPDATE FUNCTIONS --------------------------- //
+// -------------------------------------------------------------------- //
+// -------------------------------------------------------------------- //
 solution.prototype.updateVisualization = function() {
-    // update the big labels
+    // update each section of the visualization
+    this.updatePunnettSquare();
+    this.updatePhenotypicRatio();
+    this.updateGenotypicRatio();
+}
+solution.prototype.updatePunnettSquare = function() {
+    // first update the big labels
     this.topSideLabel.text(this.sideSelection[0]);
     this.botSideLabel.text(this.sideSelection[1]);
     this.topLeftLabel.text(this.topSelection[0]);
     this.topRightLabel.text(this.topSelection[1]);
-    // update the images and sublabels 
+    // then update the images and labels inside the Punnett square
     var greenSrc = 'assets/green_pea.svg';
     var yellowSrc = 'assets/yellow_pea.svg';
-
-    // Update images and labels
     // If the top and side characters are equal, we can duplicate the characters to save time checking all cases
     if(this.topSelection[0] === this.sideSelection[0]) {
         this.TLlabel.text(this.topSelection[0] + this.topSelection[0]);
+        // we only need to check if one character equals 'Y' since both characters are equal
         if(this.topSelection[0] === 'Y') {
             this.TLimg.attr('src', yellowSrc);
         } else {
@@ -253,8 +242,22 @@ solution.prototype.updateVisualization = function() {
         this.BRlabel.text('Yy');
         this.BRimg.attr('src', yellowSrc);
     }
-    this.updatePhenotypeChart();
-    this.updateGenotypicRatio();
+}
+solution.prototype.updatePhenotypicRatio = function() {
+    if(this.pChart === undefined) { return; }
+    var numYellow = 0;
+    var numGreen = 0;
+    if(this.TLlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    if(this.TRlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    if(this.BLlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    if(this.BRlabel.text().includes('Y')) { numYellow++; }
+    else { numGreen++; }
+    this.pChart.data.datasets[0].data[0] = numYellow;
+    this.pChart.data.datasets[0].data[1] = numGreen;
+    this.pChart.update();
 }
 solution.prototype.updateGenotypicRatio = function() {
     // count the types of combinations present in the table
@@ -278,9 +281,3 @@ solution.prototype.updateGenotypicRatio = function() {
         numYy + ' Yy : '
         + numyy + ' yy');
 }
-
-
-
-
-
-
